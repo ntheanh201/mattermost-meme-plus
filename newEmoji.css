@@ -12,11 +12,11 @@
 }
 
 .transition {
-    -webkit-transform: scale(.35);
-    -moz-transform: scale(.35);
-    -ms-transform: scale(.35);
-    -o-transform: scale(.35);
-    transform: scale(.35);
+    -webkit-transform: scale(.8);
+    -moz-transform: scale(.8);
+    -ms-transform: scale(.8);
+    -o-transform: scale(.8);
+    transform: scale(.8);
 }
 
 .transition {

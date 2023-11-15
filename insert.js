@@ -19,7 +19,7 @@ $(document).ready(function () {
 });
 
 async function mainApp() {
-    $(`<span role="button" aria-label="Open new emoji picker" ><span id="newEmojiBtn" data-active-"false" class="fa fa-address-card-o icon--emoji-picker emoji-btn"></span></span>`).insertAfter($('#create_post .post-body__actions > span').last());
+    $(`<button id="newEmojiBtn" type="button" aria-label="select an emoji" class="IconContainer-hWSzHh bhaYqE"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-smile-plus"><path d="M22 11v1a10 10 0 1 1-9-10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/><path d="M16 5h6"/><path d="M19 2v6"/></svg></button>`).insertAfter($('.FormattingBarContainer-ffUiMo > div').last());
     var panel = createStaticEmojiPanel();
     $(panel).insertAfter("#root");
 
@@ -262,7 +262,7 @@ function createStaticEmojiPanel() {
             </div>
             <div id="newEmojiPanel" class="emoji-picker" style="display: none">
             <div class="emoji-picker__categories">
-                <span>Mattermost Emoji 1.0</span>
+                <span>Mattermost Emoji 2.0</span>
                 <a style="float: right" id="close-btn" href="#"><i class="fa fa-close" title="Close"></i></a>
             </div>
             <div id="emojipickeritems-new" class="emoji-picker__items"><div id="loading"></div>`;
