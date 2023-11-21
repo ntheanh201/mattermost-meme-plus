@@ -37,7 +37,7 @@ async function mainApp() {
                 $('#newEmojiPanel-preview').css('right', '743px');
             } else {
                 $('#newEmojiPanel').css('right', '12px');
-                $('#newEmojiPanel-preview').css('right', '341px');
+                $('#newEmojiPanel-preview').css('right', '380px');
             }
 
             $('.emoji-picker').hide();
