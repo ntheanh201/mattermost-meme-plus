@@ -2,9 +2,9 @@
     "update_url": "https://clients2.google.com/service/update2/crx",
 
     "name": "Mattermost Emoji Extension",
-    "description": "Emoji for Mattermost",
+    "description": "Emoji V2 for Mattermost by ntheanh201",
     "icons": { "16": "icon.png", "48": "icon.png", "128": "icon.png" },
-    "author": "Nguyễn Xuân Linh, The Anh Nguyen",
+    "author": "Nguyễn Xuân Linh, ntheanh201",
     "web_accessible_resources": ["img/*", "data/emo_url.json"],
     "version": "2.0",
     "permissions": ["activeTab", "storage"],
