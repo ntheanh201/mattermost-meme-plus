@@ -26,5 +26,5 @@ fi
 
 # Print all filenames
 for filename in "${filenames[@]##*/}"; do
-  echo "\""https://raw.githubusercontent.com/ntheanh201/mattermost-emoji-extension/master/img/pepe-sad/$filename"\","
+  echo "\""https://raw.githubusercontent.com/ntheanh201/mattermost-emoji-extension/master/img/wojacks/$filename"\","
 done
