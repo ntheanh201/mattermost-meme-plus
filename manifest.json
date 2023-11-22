@@ -1,7 +1,7 @@
 {
-  "name": "Mattermost Emoji Plus",
-  "description": "Emoji Plus for Mattermost by ntheanh201",
-  "version": "3.0",
+  "name": "Mattermost Meme Plus",
+  "description": "Mattermost Meme Plus by ntheanh201",
+  "version": "3.1",
   "manifest_version": 3,
   "icons": {
     "16": "icon.png",
@@ -19,7 +19,7 @@
   ],
   "action": {
     "default_icon": "icon.png",
-    "default_title": "Mattermost Emoji"
+    "default_title": "Mattermost Meme Plus"
   },
   "background": {
     "service_worker": "background.js"
@@ -29,13 +29,19 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["jquery.js", "insert.js"],
-      "css": ["newEmoji.css"],
+      "js": [
+        "jquery.js",
+        "insert.js"
+      ],
+      "css": [
+        "newEmoji.css"
+      ],
       "run_at": "document_end"
     }
   ],
-  "web_accessible_resources": [{
-    "resources": [
+  "web_accessible_resources": [
+    {
+      "resources": [
         "img/*"
       ],
       "matches": [
