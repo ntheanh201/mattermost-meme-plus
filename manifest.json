@@ -1,28 +1,54 @@
 {
-    "update_url": "https://clients2.google.com/service/update2/crx",
-
-    "name": "Mattermost Emoji Extension",
-    "description": "Emoji V2 for Mattermost by ntheanh201",
-    "icons": { "16": "icon.png", "48": "icon.png", "128": "icon.png" },
-    "author": "Nguyễn Xuân Linh, ntheanh201",
-    "web_accessible_resources": ["img/*", "data/emo_url.json"],
-    "version": "2.0",
-    "permissions": ["activeTab", "storage"],
-    "background": {
-        "scripts": ["background.js"],
-        "persistent": false
+  "name": "Mattermost Emoji Plus",
+  "description": "Emoji Plus for Mattermost by ntheanh201",
+  "version": "3.0",
+  "manifest_version": 3,
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://*.mattermost.com/*",
+    "http://mattermost.*/*",
+    "https://mattermost.*/*"
+  ],
+  "action": {
+    "default_icon": "icon.png",
+    "default_title": "Mattermost Emoji"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": ["jquery.js", "insert.js"],
+      "css": ["newEmoji.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [{
+    "resources": [
+        "img/*"
+      ],
+      "matches": [
+        "*://*/*"
+      ]
     },
-    "browser_action": {
-        "default_icon": "icon.png",
-        "default_title": "Mattermost Emoji"
-    },
-    "content_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "run_at": "document_end",
-            "js": ["jquery.js", "insert.js"],
-            "css": ["newEmoji.css"]
-        }
-    ],
-    "manifest_version": 2
+    {
+      "resources": [
+        "data/emo_url.json"
+      ],
+      "matches": [
+        "*://*/*"
+      ]
+    }
+  ]
 }
