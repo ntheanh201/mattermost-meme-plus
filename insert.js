@@ -101,46 +101,48 @@ async function mainApp() {
         event.stopPropagation();
     });
 
-    rightbarObserveSetting();
+    // rightbarObserveSetting();
 }
 
-function rightbarObserveSetting() {
-    var targetNode = document.querySelector('#sidebar-right');
-    var config = {attributes: true};
-    var callback = function (mutationsList, observer) {
-        for (var mutation of mutationsList) {
-            if (mutation.type == 'attributes') {
-                if (mutation.target.classList.length >= 2 && mutation.target.classList[1] === 'move--left') {
-                    $(`<span role="button" aria-label="Open new emoji picker" ><span id="newQuoteEmojiBtn" data-active-"false" class="fa fa-address-card-o icon--emoji-picker emoji-btn"></span></span>`).insertAfter($('#thread--root ~ .post-create__container .post-body__actions > span').last());
-                    function onSidebarEmojiBtnClick() {
-                        var active = $(this).data.active;
-                        if (active) {
-                            $(this).data.active = false;
-                            $('#newEmojiPanel').hide();
-                        } else {
-                            $(this).data.active = true;
-                            $('.emoji-picker').hide();
-                            $('#newEmojiPanel').css('top', '432px');
-                            $('#newEmojiPanel').css('right', '12px');
+// function rightbarObserveSetting() {
+//     var targetNode = document.querySelector('#sidebar-right');
+//     var config = {attributes: true};
+//     var callback = function (mutationsList, observer) {
+//         for (var mutation of mutationsList) {
+//             if (mutation.type == 'attributes') {
+//                 if (mutation.target.classList.length >= 2 && mutation.target.classList[1] === 'move--left') {
+//                     $(`<span role="button" aria-label="Open new emoji picker" ><span id="newQuoteEmojiBtn" data-active-"false" class="fa fa-address-card-o icon--emoji-picker emoji-btn"></span></span>`).insertAfter($('.FormattingBarContainer-ffUiMo').last());
+//                     function onSidebarEmojiBtnClick() {
+//                         var active = $(this).data.active;
+//                         if (active) {
+//                             $(this).data.active = false;
+//                             $('#newEmojiPanel').hide();
+//                         } else {
+//                             $(this).data.active = true;
+//                             $('.emoji-picker').hide();
+//                             $('#newEmojiPanel').css('top', '432px');
+//                             $('#newEmojiPanel').css('right', '12px');
 
-                            $('#newEmojiPanel-preview').css('top', '849px');
-                            $('#newEmojiPanel-preview').css('right', '15px');
-                            $('#newEmojiPanel-preview').css('background-size', '80px');
-                            $('#newEmojiPanel-preview').css('max-width', '80px');
-                            $('#newEmojiPanel-preview').css('max-height', '80px');
-                            $('#newEmojiPanel').show();
-                            event.stopPropagation();
-                        }
-                    }
-                    $("#newQuoteEmojiBtn").click(onSidebarEmojiBtnClick);
-                }
-            }
-        }
-    };
+//                             $('#newEmojiPanel-preview').css('top', '849px');
+//                             $('#newEmojiPanel-preview').css('right', '15px');
+//                             $('#newEmojiPanel-preview').css('background-size', '80px');
+//                             $('#newEmojiPanel-preview').css('max-width', '80px');
+//                             $('#newEmojiPanel-preview').css('max-height', '80px');
+//                             $('#newEmojiPanel').show();
+//                             event.stopPropagation();
+//                         }
+//                     }
+//                     $("#newQuoteEmojiBtn").click(onSidebarEmojiBtnClick);
+//                 }
+//             }
+//         }
+//     };
 
-    var observer = new MutationObserver(callback);
-    observer.observe(targetNode, config);
-}
+//     var observer = new MutationObserver(callback);
+//     observer.observe(targetNode, config);
+// }
+
+
 function loadRecentEmoji(inputRecentEmoji = null) {
     var openDiv = `<div class="emoji-picker-items__container"><div class="emoji-picker__category-header"><span>Recently used</span></div></div><div class="emoji-picker-items__container">`;
     var contentDiv = "";
@@ -206,7 +208,7 @@ function generateEmoji(url, size = "") {
     }
     ;
 
-    return '![Mattermost](' + url + ' =' + size + ' "Mattermost Icon")';
+    return '![Meme](' + url + ' =' + size + ' "Meme")';
 }
 
 async function createNewEmojiPanel() {
@@ -262,7 +264,7 @@ function createStaticEmojiPanel() {
             </div>
             <div id="newEmojiPanel" class="emoji-picker" style="display: none">
             <div class="emoji-picker__categories">
-                <span>Mattermost Emoji 2.0</span>
+                <span>Meme+</span>
                 <a style="float: right" id="close-btn" href="#"><i class="fa fa-close" title="Close"></i></a>
             </div>
             <div id="emojipickeritems-new" class="emoji-picker__items"><div id="loading"></div>`;
