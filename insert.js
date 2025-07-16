@@ -19,19 +19,18 @@ $(document).ready(function () {
 });
 
 async function mainApp() {
-    $(`<button id="newEmojiBtn" type="button" aria-label="select an emoji" class="IconContainer-hWSzHh bhaYqE"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-smile-plus"><path d="M22 11v1a10 10 0 1 1-9-10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/><path d="M16 5h6"/><path d="M19 2v6"/></svg></button>`).insertAfter($('.FormattingBarContainer-ffUiMo > div').last());
+    $(`<button id="newEmojiBtn" type="button" aria-label="select an emoji" class="IconContainer-hWSzHh bhaYqE"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-smile-plus"><path d="M22 11v1a10 10 0 1 1-9-10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/><path d="M16 5h6"/><path d="M19 2v6"/></svg></button>`).insertAfter($('.FormattingBarContainer-fgcgon > div').last());
     var panel = createStaticEmojiPanel();
-    $(panel).insertAfter("#root");
+    // Place the panel after the formatting bar's parent for better positioning
+    $(panel).insertAfter($('.FormattingBarContainer-fgcgon').parent());
 
-    $("#newEmojiBtn").click(onEmojiBtnClick);
-    function onEmojiBtnClick() {
-        var active = $(this).data.active;
-
+    $("#newEmojiBtn").click(function(event) {
+        var active = $(this).data('active');
         if (active) {
-            $(this).data.active = false;
+            $(this).data('active', false);
             $('#newEmojiPanel').hide();
         } else {
-            $(this).data.active = true;
+            $(this).data('active', true);
             if ($('.sidebar--right.move--left').length) {
                 $('#newEmojiPanel').css('right', '417px');
                 $('#newEmojiPanel-preview').css('right', '743px');
@@ -39,18 +38,16 @@ async function mainApp() {
                 $('#newEmojiPanel').css('right', '12px');
                 $('#newEmojiPanel-preview').css('right', '380px');
             }
-
             $('.emoji-picker').hide();
             $('#newEmojiPanel').css('bottom', '82px');
             $('#newEmojiPanel-preview').css('bottom', '389px');
             $('#newEmojiPanel-preview').css('background-size', '103px');
             $('#newEmojiPanel-preview').css('max-width', 'unset');
             $('#newEmojiPanel-preview').css('max-height', 'unset');
-
             $('#newEmojiPanel').show();
             event.stopPropagation();
         }
-    }
+    });
 
     var emojiPanel = await createNewEmojiPanel();
 

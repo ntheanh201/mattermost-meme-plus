@@ -13,9 +13,7 @@
     "storage"
   ],
   "host_permissions": [
-    "https://*.mattermost.com/*",
-    "http://mattermost.*/*",
-    "https://mattermost.*/*"
+    "https://*.mattermost.com/*"
   ],
   "action": {
     "default_icon": "icon.png",
