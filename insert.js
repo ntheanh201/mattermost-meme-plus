@@ -11,6 +11,14 @@ async function importEmoUrl() {
 }
 
 $(document).ready(function () {
+    // Only run if this is a Mattermost page (by checking for a unique Mattermost element)
+    if (!$('#post-create').length && !$('noscript').text().includes('Mattermost')) {
+        // Remove any previously injected UI if present
+        $('#newEmojiBtn').remove();
+        $('#newEmojiPanel').remove();
+        $('#newEmojiPanel-preview').remove();
+        return;
+    }
     if ($('noscript').text().search('Mattermost')) {
         waitForEl("#post-create", function () {
             mainApp();
@@ -52,9 +60,9 @@ async function mainApp() {
     var emojiPanel = await createNewEmojiPanel();
 
     $('#loading').remove();
-    $(".icon-sticker").click(function () {
+    $(".icon-sticker").click(async function () {
         let emojiSrc = $(this).find("img").attr("src");
-        postTextBox(generateEmoji(emojiSrc));
+        await pasteImageToTextBox(emojiSrc);
         let recentEmoji = localStorage.getItem("recentEmojis_extend");
         if (localStorage.getItem("recentEmojis_extend") !== null) {
             let recentEmoji = JSON.parse(localStorage.getItem("recentEmojis_extend"));
@@ -71,7 +79,7 @@ async function mainApp() {
             localStorage.setItem("recentEmojis_extend", JSON.stringify([emojiSrc]));
         }
 
-        $('#newEmojiBtn').data.active = false;
+        // $('#newEmojiBtn').data.active = false; // Remove this line so the button stays visible
         $('#newEmojiPanel-preview').hide();
         $('#newEmojiPanel').hide();
     });
@@ -90,8 +98,8 @@ async function mainApp() {
     });
 
     $(document).click(function () {
-        $('#newEmojiBtn').data.active = false;
-        $('#newEmojiPanel').hide();
+        // $('#newEmojiBtn').data.active = false; // Remove this line so the button stays visible
+        // $('#newEmojiPanel').hide();
     });
 
     $("#newEmojiPanel").click(function (event) {
@@ -158,6 +166,50 @@ function loadRecentEmoji(inputRecentEmoji = null) {
         var closeDiv = `</div>`;
         $('#recent_emoji').html(openDiv + contentDiv + closeDiv);
 }
+}
+
+async function pasteImageToTextBox(imageUrl) {
+    try {
+        // Fetch the image
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        
+        // Create a File object from the blob
+        const fileName = imageUrl.split('/').pop() || 'emoji.png';
+        const file = new File([blob], fileName, { type: blob.type });
+        
+        // Find the active textarea
+        let target = null;
+        if ($("#reply_textbox").length) {
+            target = document.getElementById("reply_textbox");
+        } else if ($("#post_textbox").length) {
+            target = document.getElementById("post_textbox");
+        }
+        
+        if (target) {
+            target.focus();
+            
+            // Use only paste event - simplest and most reliable
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            
+            const pasteEvent = new ClipboardEvent('paste', {
+                bubbles: true,
+                cancelable: true,
+                clipboardData: dataTransfer
+            });
+            
+            target.dispatchEvent(pasteEvent);
+            
+        } else {
+            throw new Error('No target element found');
+        }
+    } catch (error) {
+        console.error('Failed to paste image:', error);
+        // Fallback to the old method
+        let content = generateEmoji(imageUrl);
+        postTextBox(content);
+    }
 }
 
 function postTextBox(content) {
