@@ -30,31 +30,50 @@ function ensureEmojiButtonExists() {
     if (!$('#newEmojiBtn').length) {
         $(`<button id="newEmojiBtn" type="button" aria-label="select an emoji" class="IconContainer-hWSzHh bhaYqE"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-smile-plus"><path d="M22 11v1a10 10 0 1 1-9-10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/><path d="M16 5h6"/><path d="M19 2v6"/></svg></button>`).insertAfter($('.FormattingBarContainer-fgcgon > div').last());
         
-        $("#newEmojiBtn").click(function(event) {
-            var active = $(this).data('active');
-            if (active) {
-                $(this).data('active', false);
-                $('#newEmojiPanel').hide();
-            } else {
-                $(this).data('active', true);
-                if ($('.sidebar--right.move--left').length) {
-                    $('#newEmojiPanel').css('right', '417px');
-                    $('#newEmojiPanel-preview').css('right', '743px');
-                } else {
-                    $('#newEmojiPanel').css('right', '12px');
-                    $('#newEmojiPanel-preview').css('right', '380px');
-                }
-                $('.emoji-picker').hide();
-                $('#newEmojiPanel').css('bottom', '82px');
-                $('#newEmojiPanel-preview').css('bottom', '389px');
-                $('#newEmojiPanel-preview').css('background-size', '103px');
-                $('#newEmojiPanel-preview').css('max-width', 'unset');
-                $('#newEmojiPanel-preview').css('max-height', 'unset');
-                $('#newEmojiPanel').show();
-                event.stopPropagation();
-            }
-        });
+        attachEmojiButtonClickHandler();
     }
+}
+
+function ensureEmojiPanelExists() {
+    if (!$('#newEmojiPanel').length) {
+        var panel = createStaticEmojiPanel();
+        $(panel).insertAfter($('.FormattingBarContainer-fgcgon').parent());
+        
+        // Re-create the emoji content if it doesn't exist
+        if (!$('#emojipickeritems-new .icon-sticker').length) {
+            createNewEmojiPanel().then(() => {
+                $('#loading').remove();
+                attachEmojiItemClickHandlers();
+            });
+        }
+    }
+}
+
+function attachEmojiButtonClickHandler() {
+    $("#newEmojiBtn").off('click').on('click', function(event) {
+        var active = $(this).data('active');
+        if (active) {
+            $(this).data('active', false);
+            $('#newEmojiPanel').hide();
+        } else {
+            $(this).data('active', true);
+            if ($('.sidebar--right.move--left').length) {
+                $('#newEmojiPanel').css('right', '417px');
+                $('#newEmojiPanel-preview').css('right', '743px');
+            } else {
+                $('#newEmojiPanel').css('right', '12px');
+                $('#newEmojiPanel-preview').css('right', '380px');
+            }
+            $('.emoji-picker').hide();
+            $('#newEmojiPanel').css('bottom', '82px');
+            $('#newEmojiPanel-preview').css('bottom', '389px');
+            $('#newEmojiPanel-preview').css('background-size', '103px');
+            $('#newEmojiPanel-preview').css('max-width', 'unset');
+            $('#newEmojiPanel-preview').css('max-height', 'unset');
+            $('#newEmojiPanel').show();
+            event.stopPropagation();
+        }
+    });
 }
 
 async function mainApp() {
@@ -67,7 +86,16 @@ async function mainApp() {
     var emojiPanel = await createNewEmojiPanel();
 
     $('#loading').remove();
-    $(".icon-sticker").click(async function () {
+    
+    // Attach emoji item click handlers immediately
+    attachEmojiItemClickHandlers();
+    
+    // Initialize all handlers and monitoring
+    initializeEmojiSystem();
+}
+
+function attachEmojiItemClickHandlers() {
+    $(".icon-sticker").off('click').on('click', async function () {
         let emojiSrc = $(this).find("img").attr("src");
         await pasteImageToTextBox(emojiSrc);
         let recentEmoji = localStorage.getItem("recentEmojis_extend");
@@ -91,15 +119,21 @@ async function mainApp() {
         $('#newEmojiPanel').hide();
         
         // Ensure button is still present after meme selection
-        setTimeout(ensureEmojiButtonExists, 100);
+        setTimeout(function() {
+            ensureEmojiButtonExists();
+            ensureEmojiPanelExists();
+            attachEmojiButtonClickHandler();
+        }, 100);
     });
+}
 
-    $("#close-btn").click(function () {
+function attachOtherHandlers() {
+    $("#close-btn").off('click').on('click', function () {
         $('#newEmojiBtn').data('active', false);
         $('#newEmojiPanel').hide();
     });
 
-    $('.icon-sticker img').hover(function () {
+    $('.icon-sticker img').off('mouseenter mouseleave').hover(function () {
         $('#newEmojiPanel-preview').show();
         let url = $(this).attr('src');
         $('#newEmojiPanel-preview').css('background-image', 'url("' + url + '")');
@@ -107,17 +141,37 @@ async function mainApp() {
         $('#newEmojiPanel-preview').hide();
     });
 
-    $(document).click(function () {
+    $("#newEmojiPanel").off('click').on('click', function (event) {
+        event.stopPropagation();
+    });
+}
+
+function attachDocumentHandlers() {
+    $(document).off('click.emojiPanel').on('click.emojiPanel', function () {
         // $('#newEmojiBtn').data.active = false; // Remove this line so the button stays visible
         // $('#newEmojiPanel').hide();
     });
+}
 
-    $("#newEmojiPanel").click(function (event) {
-        event.stopPropagation();
-    });
-
-    // Periodically check if the emoji button is still present and re-add if needed
-    setInterval(ensureEmojiButtonExists, 1000);
+function initializeEmojiSystem() {
+    attachOtherHandlers();
+    attachDocumentHandlers();
+    
+    // Periodically check if the emoji system is still present and re-add if needed
+    setInterval(function() {
+        ensureEmojiButtonExists();
+        ensureEmojiPanelExists();
+        // Also ensure click handlers are attached if elements exist but handlers might be missing
+        if ($('#newEmojiBtn').length) {
+            attachEmojiButtonClickHandler();
+        }
+        if ($('#newEmojiPanel').length) {
+            attachOtherHandlers();
+            if ($('.icon-sticker').length) {
+                attachEmojiItemClickHandlers();
+            }
+        }
+    }, 1000);
 
     // rightbarObserveSetting();
 }
@@ -288,7 +342,6 @@ async function createNewEmojiPanel() {
     urlArr = data;
     let contentDiv = "";
     Object.keys(urlArr).forEach(function (key) {
-        let urls = urlArr[key];
         contentDiv += createHtmlFromUrl(key, urlArr[key]);
     });
 
